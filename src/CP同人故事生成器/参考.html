@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵感熔炉 - 米色时光</title>
+    <!-- 引入 Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* --- 核心变量与米色时光主题 --- */
+        :root {
+            --bg-color: #fdfaf5;
+            --paper-color: #f5f5dc;
+            --accent-color: #8b4513;
+            --text-color: #4a3728;
+            --border-color: #d2b48c;
+            --hover-color: #e6ccab;
+            --shadow: 0 4px 15px rgba(139, 69, 19, 0.1);
+            --font-serif: "Georgia", "Times New Roman", "Source Han Serif SC", "Noto Serif CJK SC", serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-serif);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* --- 容器设计 --- */
+        .forge-container {
+            width: 100%;
+            max-width: 900px;
+            background: var(--paper-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 装饰性纹理 */
+        .forge-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* --- 顶部一级导航 --- */
+        .main-tabs {
+            display: flex;
+            background: var(--accent-color);
+            padding: 0 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .main-tabs::-webkit-scrollbar { display: none; }
+
+        .tab-item {
+            padding: 15px 20px;
+            color: #fff;
+            cursor: pointer;
+            white-space: nowrap;
+            opacity: 0.7;
+            transition: 0.3s;
+            border-bottom: 3px solid transparent;
+            font-weight: bold;
+        }
+        .tab-item.active {
+            opacity: 1;
+            border-bottom-color: #fdfaf5;
+        }
+
+        /* --- 内容区域 --- */
+        .content-section {
+            display: none;
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+        }
+        .content-section.active { display: block; }
+
+        /* --- 模块标题样式 --- */
+        .section-title {
+            font-size: 1.4rem;
+            border-left: 5px solid var(--accent-color);
+            padding-left: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* --- 角色设定二级标签页 --- */
+        .char-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .char-tab-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            background: #eee;
+        }
+        .char-tab-btn.active {
+            background: var(--paper-color);
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        /* --- 表单布局 --- */
+        .form-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+        .form-label {
+            width: 100px;
+            font-weight: bold;
+            padding-top: 8px;
+            flex-shrink: 0;
+            text-align: right;
+            font-size: 0.9rem;
+        }
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: rgba(255,255,255,0.6);
+            font-family: inherit;
+            color: var(--text-color);
+            outline: none;
+        }
+        textarea { height: 80px; resize: vertical; }
+
+        /* 随机骰子按钮 */
+        .dice-btn {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 5px;
+            transition: transform 0.2s;
+        }
+        .dice-btn:hover { transform: rotate(45deg); }
+
+        /* --- 方案抉择卡片 --- */
+        .scheme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        @media (max-width: 600px) {
+            .scheme-grid { grid-template-columns: 1fr; }
+            .form-group { flex-direction: column; }
+            .form-label { text-align: left; width: 100%; }
+        }
+
+        .scheme-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+        .scheme-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+        .card-star { position: absolute; top: 10px; right: 10px; color: #ccc; font-size: 1.2rem; }
+        .card-star.active { color: #f1c40f; }
+        .card-title { font-weight: bold; margin-bottom: 8px; color: var(--accent-color); }
+        .card-desc { font-size: 0.85rem; line-height: 1.4; color: #666; }
+
+        /* --- 分页控件 --- */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .page-btn {
+            padding: 8px 15px;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .page-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* --- 弹窗设计 --- */
+        .modal-overlay {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--paper-color);
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            border-radius: 12px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .close-modal { position: absolute; top:10px; right:15px; cursor: pointer; font-size: 1.5rem; }
+
+        /* --- 大纲列表 --- */
+        .outline-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .outline-item {
+            background: rgba(255,255,255,0.4);
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        /* --- 按钮通用 --- */
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+        .action-btn:hover { background: #5d2e0d; }
+
+    </style>
+</head>
+
+<body>
+
+<div class="forge-container">
+    <!-- 顶部导航 -->
+    <div class="main-tabs">
+        <div class="tab-item active" onclick="switchMainTab(0)">灵感注入</div>
+        <div class="tab-item" onclick="switchMainTab(1)">方案抉择</div>
+        <div class="tab-item" onclick="switchMainTab(2)">大纲审定</div>
+        <div class="tab-item" onclick="switchMainTab(3)">最终生成</div>
+    </div>
+
+    <!-- 模块 1: 灵感注入 -->
+    <div id="section-0" class="content-section active">
+        <div class="section-title">
+            <span><i class="fas fa-feather-pointed"></i> 设定集管理</span>
+            <select style="width: 150px; font-size: 0.8rem;">
+                <option>新建设定集...</option>
+                <option>江湖豪情 (设定集)</option>
+                <option>赛博之恋 (设定集)</option>
+            </select>
+        </div>
+
+        <div class="char-tabs">
+            <div class="char-tab-btn active" onclick="switchChar(0)">角色 A</div>
+            <div class="char-tab-btn" onclick="switchChar(1)">角色 B</div>
+        </div>
+
+        <!-- 角色A表单 -->
+        <div id="char-form-0" class="char-form">
+            <div class="form-group">
+                <div class="form-label">姓名风格</div>
+                <div class="input-wrapper">
+                    <select id="name-style-a">
+                        <option>中式</option>
+                        <option>西式</option>
+                        <option>日式</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">姓氏/名字</div>
+                <div class="input-wrapper">
+                    <input type="text" placeholder="姓氏" style="width: 40%;">
+                    <input type="text" placeholder="名字">
+                    <button class="dice-btn"><i class="fas fa-dice"></i></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">整体意象</div>
+                <div class="input-wrapper">
+                    <input type="text" placeholder="如：深海、残阳...">
+                    <button class="dice-btn"><i class="fas fa-dice"></i></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">性格底色</div>
+                <div class="input-wrapper">
+                    <input type="text" placeholder="核心性格倾向">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">背景故事</div>
+                <div class="input-wrapper">
+                    <textarea placeholder="简述角色过往..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- 角色B表单 (初始隐藏) -->
+        <div id="char-form-1" class="char-form" style="display: none;">
+             <div class="form-group">
+                <div class="form-label">姓名风格</div>
+                <div class="input-wrapper">
+                    <select id="name-style-b">
+                        <option>中式</option>
+                        <option>西式</option>
+                        <option>日式</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">姓名</div>
+                <div class="input-wrapper">
+                    <input type="text" placeholder="输入姓名或随机">
+                    <button class="dice-btn"><i class="fas fa-dice"></i></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-label">特质</div>
+                <div class="input-wrapper">
+                    <textarea placeholder="独特的习惯或能力..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <button class="action-btn">铸造故事基石</button>
+    </div>
+
+    <!-- 模块 2: 方案抉择 -->
+    <div id="section-1" class="content-section">
+        <div class="section-title">
+            <span><i class="fas fa-wand-sparkles"></i> 故事基础方案</span>
+            <div style="font-size: 0.8rem;">
+                <input type="checkbox" id="fav-only"> <label for="fav-only">仅看收藏</label>
+            </div>
+        </div>
+
+        <div class="scheme-grid">
+            <!-- 卡片 1 -->
+            <div class="scheme-card" onclick="openModal('落日之约', '这是一段跨越时空的誓言，在夕阳染红地平线时，他们再次相遇。', '强强 / 宿命 / HE')">
+                <i class="fas fa-star card-star active"></i>
+                <div class="card-title">落日之约</div>
+                <div class="card-desc">这是一段跨越时空的誓言，在夕阳染红地平线时...</div>
+                <div style="font-size: 0.7rem; margin-top: 10px; color: var(--accent-color);">强强 / 宿命 / HE</div>
+            </div>
+            <!-- 卡片 2 -->
+            <div class="scheme-card" onclick="openModal('深海回声', '潜水员与神秘生物的博弈，充满了未知的危险与迷人的诱惑。', '人外 / 悬疑 / OE')">
+                <i class="fas fa-star card-star"></i>
+                <div class="card-title">深海回声</div>
+                <div class="card-desc">潜水员与神秘生物的博弈，充满了未知的危险...</div>
+                <div style="font-size: 0.7rem; margin-top: 10px; color: var(--accent-color);">人外 / 悬疑 / OE</div>
+            </div>
+            <!-- 卡片 3 -->
+            <div class="scheme-card" onclick="openModal('霓虹残影', '赛博朋克世界的底层挣扎，代码中隐藏着破碎的真心。', '赛博 / 虐恋 / BE')">
+                <i class="fas fa-star card-star"></i>
+                <div class="card-title">霓虹残影</div>
+                <div class="card-desc">赛博朋克世界的底层挣扎，代码中隐藏着破碎...</div>
+                <div style="font-size: 0.7rem; margin-top: 10px; color: var(--accent-color);">赛博 / 虐恋 / BE</div>
+            </div>
+            <!-- 卡片 4 -->
+            <div class="scheme-card" onclick="openModal('药庐余香', '温婉医者与重伤杀手，在静谧的药炉旁暗生情愫。', '古风 / 治愈 / HE')">
+                <i class="fas fa-star card-star"></i>
+                <div class="card-title">药庐余香</div>
+                <div class="card-desc">温婉医者与重伤杀手，在静谧的药炉旁暗生...</div>
+                <div style="font-size: 0.7rem; margin-top: 10px; color: var(--accent-color);">古风 / 治愈 / HE</div>
+            </div>
+        </div>
+
+        <div class="pagination">
+            <button class="page-btn" disabled><i class="fas fa-chevron-left"></i> 上一页</button>
+            <span style="font-weight: bold;">第 1 / 3 页</span>
+            <button class="page-btn">下一页 <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- 模块 3: 大纲审定 -->
+    <div id="section-2" class="content-section">
+        <div class="section-title">
+            <span><i class="fas fa-scroll"></i> 章节蓝图细化</span>
+        </div>
+
+        <div class="outline-list">
+            <div class="outline-item">
+                <div style="font-weight: bold; margin-bottom: 5px;">第一章：初露锋芒</div>
+                <textarea placeholder="本章梗概...">山雨欲来风满楼，两人在窄巷中因误会大打出手...</textarea>
+            </div>
+            <div class="outline-item">
+                <div style="font-weight: bold; margin-bottom: 5px;">第二章：疑云丛生</div>
+                <textarea placeholder="本章梗概...">被迫结伴而行，却发现彼此的秘密紧密相连...</textarea>
+            </div>
+            <div class="outline-item">
+                <div style="font-weight: bold; margin-bottom: 5px;">第三章：并肩作战</div>
+                <textarea placeholder="本章梗概...">面对共同的敌人，第一丝信任悄然萌芽...</textarea>
+            </div>
+             <div class="outline-item">
+                <div style="font-weight: bold; margin-bottom: 5px;">第四章：情感升温</div>
+                <textarea placeholder="本章梗概...">篝火旁的夜谈，卸下防备的真实面孔...</textarea>
+            </div>
+        </div>
+
+        <button class="action-btn">审定大纲，准备开启</button>
+    </div>
+
+    <!-- 模块 4: 最终生成 -->
+    <div id="section-3" class="content-section">
+        <div class="section-title">
+            <span><i class="fas fa-fire"></i> 启程！共创未来</span>
+        </div>
+
+        <div style="background: #fff; padding: 20px; border-radius: 10px; border: 1px dashed var(--accent-color);">
+            <h3 style="margin-top: 0; color: var(--accent-color);">《落日之约》- 创作就绪</h3>
+            <p><strong>核心配对：</strong> 墨羽 & 凌霄</p>
+            <p><strong>世界观：</strong> 玄幻武侠 - 残阳谷</p>
+            <p><strong>章节预告：</strong> 共 12 章，首章约 2000 字。</p>
+            <p style="font-style: italic; font-size: 0.9rem; color: #888;">“点击下方按钮，故事将在聊天框正式拉开序幕。”</p>
+        </div>
+
+        <button class="action-btn" style="background: #e67e22; height: 80px; font-size: 1.4rem;">
+            <i class="fas fa-play-circle"></i> 启动创作连载
+        </button>
+    </div>
+</div>
+
+<!-- 弹窗容器 -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">×</span>
+        <h2 id="modal-title" style="color: var(--accent-color);"></h2>
+        <div id="modal-tags" style="color: #888; margin-bottom: 15px; font-size: 0.9rem;"></div>
+        <p id="modal-body" style="line-height: 1.6;"></p>
+        <button class="action-btn" onclick="closeModal()">以此为蓝本继续</button>
+    </div>
+</div>
+
+<script>
+    // 切换主标签页
+    function switchMainTab(index) {
+        // 更新标签样式
+        const tabs = document.querySelectorAll('.tab-item');
+        tabs.forEach((tab, i) => {
+            tab.classList.toggle('active', i === index);
+        });
+
+        // 更新内容显示
+        const sections = document.querySelectorAll('.content-section');
+        sections.forEach((section, i) => {
+            section.classList.toggle('active', i === index);
+        });
+    }
+
+    // 切换角色二级标签
+    function switchChar(index) {
+        const btns = document.querySelectorAll('.char-tab-btn');
+        btns.forEach((btn, i) => {
+            btn.classList.toggle('active', i === index);
+        });
+
+        const forms = document.querySelectorAll('.char-form');
+        forms.forEach((form, i) => {
+            form.style.display = (i === index) ? 'block' : 'none';
+        });
+    }
+
+    // 弹窗控制
+    function openModal(title, body, tags) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-body').innerText = body;
+        document.getElementById('modal-tags').innerText = tags;
+        document.getElementById('modal-overlay').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modal-overlay').style.display = 'none';
+    }
+
+    // 点击外部关闭弹窗
+    window.onclick = function(event) {
+        const modal = document.getElementById('modal-overlay');
+        if (event.target == modal) {
+            closeModal();
+        }
+    }
+</script>
+
+</body>
+</html>

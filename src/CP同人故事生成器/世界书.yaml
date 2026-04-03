@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/worldbook.zh.json
+条目:
+  - 名称: 姓
+    启用: false
+    激活策略:
+      类型: 蓝灯
+    插入位置:
+      类型: 角色定义之前
+      顺序: 100
+    内容: |-
+      中式:
+        - 沈
+        - 顾
+        - 谢
+        - 裴
+        - 苏
+        - 江
+        - 陆
+        - 程
+      日式:
+        - 神宫寺
+        - 一之濑
+        - 结城
+        - 黑泽
+        - 朝仓
+        - 月岛
+      西式:
+        - 阿什福德
+        - 贝尔
+        - 卡特
+        - 维尔
+        - 辛克莱
+        - 罗文
+    额外字段:
+      cpForge:
+        kind: surname
+        id: cpforge-foundation-surname
+        title: 姓
+        favorite: false
+        sourceId: null
+        createdAt: 2026-04-03T00:00:00.000Z
+        updatedAt: 2026-04-03T00:00:00.000Z
+
+  - 名称: 名
+    启用: false
+    激活策略:
+      类型: 蓝灯
+    插入位置:
+      类型: 角色定义之前
+      顺序: 101
+    内容: |-
+      中式:
+        - 昭宁
+        - 砚秋
+        - 临川
+        - 星遥
+        - 清和
+        - 见月
+        - 予安
+        - 惊鸿
+      日式:
+        - 凛
+        - 真琴
+        - 悠真
+        - 千夏
+        - 朔夜
+        - 纱月
+      西式:
+        - 伊莱
+        - 罗文
+        - 艾瑞丝
+        - 西莉娅
+        - 阿德里安
+        - 米拉
+    额外字段:
+      cpForge:
+        kind: givenName
+        id: cpforge-foundation-given-name
+        title: 名
+        favorite: false
+        sourceId: null
+        createdAt: 2026-04-03T00:00:00.000Z
+        updatedAt: 2026-04-03T00:00:00.000Z
+
+  - 名称: 整体意象
+    启用: false
+    激活策略:
+      类型: 蓝灯
+    插入位置:
+      类型: 角色定义之前
+      顺序: 102
+    内容: |-
+      - 清冷疏离，像雪后的月光
+      - 温柔狡黠，让人很难设防
+      - 矜贵克制，情绪藏得很深
+      - 锋利危险，带一点漫不经心
+      - 松弛散漫，像总睡不醒的猫
+      - 明亮热烈，靠近时很有压迫感
+      - 沉静可靠，像雨夜里亮着的窗
+      - 病弱易碎，却藏着不肯服输的韧劲
+      - 冷淡寡言，情绪都写在眼尾
+      - 乖顺无害，却总在关键时刻反咬一口
+    额外字段:
+      cpForge:
+        kind: imageryPool
+        id: cpforge-foundation-imagery-pool
+        title: 整体意象
+        favorite: false
+        sourceId: null
+        createdAt: 2026-04-03T00:00:00.000Z
+        updatedAt: 2026-04-03T00:00:00.000Z
+
+  - 名称: 一句话大纲/剧情开头
+    启用: false
+    激活策略:
+      类型: 蓝灯
+    插入位置:
+      类型: 角色定义之前
+      顺序: 103
+    内容: |-
+      - 一场本该擦肩而过的任务事故，让他们被迫共享同一个秘密。
+      - 分离多年后重逢的那天，其中一人已经成了另一个人必须追捕的目标。
+      - 他们在同一场葬礼上认出了彼此，却谁都不敢先叫出对方的名字。
+      - 为了查清一桩旧案，他们假扮恋人潜入一座处处设防的城。
+      - 末班列车停在不存在的站台时，只有他们两人还记得真实世界。
+      - 一纸荒唐婚约把宿敌绑到一起，而反悔的代价比成亲更大。
+      - 当预言说其中一人必须亲手杀死另一人，他们决定先骗过命运。
+      - 他捡回来的不是落难旅人，而是曾经亲手背叛自己的旧爱。
+    额外字段:
+      cpForge:
+        kind: openingPool
+        id: cpforge-foundation-opening-pool
+        title: 一句话大纲/剧情开头
+        favorite: false
+        sourceId: null
+        createdAt: 2026-04-03T00:00:00.000Z
+        updatedAt: 2026-04-03T00:00:00.000Z
